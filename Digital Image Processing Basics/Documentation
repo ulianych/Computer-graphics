@@ -1,0 +1,52 @@
+Image Processing Application
+
+This application is a simple graphical interface that allows users to load images and apply various image processing filters. Below is a description of the code and the functionality of the application.
+
+## Requirements
+
+The project uses the following libraries:
+
+- `cv2` (OpenCV) - a computer vision library for image processing.
+- `PIL` - a library for working with images.
+- `numpy` - a library for working with arrays and matrices.
+- `tkinter` - a library for creating a graphical user interface.
+
+Before running the application, ensure that all the required libraries are installed. You can install them using `pip`:
+```
+pip install opencv-python-headless pillow numpy
+```
+
+## Description of Image Processing Functions
+
+### Image Processing Functions
+
+1. `sharpness(img)`: This function applies a sharpening filter to the image using a 3x3 convolution kernel.
+2. `global_thresholding_Otsu(img)`: This function performs global image binarization using Otsu's algorithm, which selects a threshold to minimize the variance between classes.
+3. `adaptive1(img)`: This function carries out adaptive image binarization using the mean method.
+4. `adaptive2(img)`: This function performs adaptive image binarization using the Gaussian method.
+5. `negative(img)`: This function inverts the colors of the image, creating a negative effect.
+
+### Main Application Features
+
+1. Image Loading: Users can select an image by clicking the "Browse" button. After selection, the image is displayed on the main canvas of the application.
+
+2. Filter Selection: Users can choose a filter from the list of available filters in the left menu. After selecting a filter and clicking the "Apply Filter" button, the image is processed with the chosen filter and displayed on the main canvas.
+
+3. Available Filters:
+   - "Original": The original image.
+   - "Sharpening filter": Image sharpening.
+   - "Global thresholding 1": Global binarization using Otsu's algorithm.
+   - "Global thresholding 2": Global binarization using Otsu's algorithm (alternative thresholding).
+   - "Negative filter": Negative effect on the image.
+   - "Adaptive thresholding 1": Adaptive binarization using the mean method.
+   - "Adaptive thresholding 2": Adaptive binarization using the Gaussian method.
+
+## Running the Application
+
+The application is launched using the `tkinter` library. The main window of the application contains a canvas for displaying processed images and buttons for loading images and applying filters.
+
+To get started, run the application and select an image using the "Browse" button. Then choose one of the filters and click "Apply Filter" to see the processed result.
+
+## Note
+
+This project utilizes a graphical interface that may not work in some runtime environments such as Jupyter Notebook. Ensure you are running the project in a regular windowed mode.
