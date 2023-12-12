@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import *
 from tkinter.messagebox import showerror
+from tkinter import simpledialog
 
 import algorithms
 
@@ -70,6 +71,10 @@ class MyApp:
         button_castle_pitway = Button(self.menu_bar, text="Алгоритм Кастла-Питвея", command=self.build_castle_pitway, background="#5ccaff")
         button_castle_pitway.pack(fill="x", pady=2, side="top")
 
+        button_vu = Button(self.menu_bar, text="Алгоритм Ву", command=self.ask_m,
+                                      background="#5ccaff")
+        button_vu.pack(fill="x", pady=2, side="top")
+
         separator2 = ttk.Separator(self.menu_bar, orient="horizontal")
         separator2.pack(pady=5, side="top")
 
@@ -99,6 +104,8 @@ class MyApp:
         self.y2_input = y2_input
         self.dots = []
         self.time = 0.0
+        self.flag = False
+        self.m = 0
 
     def run(self):
         self.root.mainloop()
@@ -166,23 +173,38 @@ class MyApp:
         # draw zero
         self.canvas.create_text(width / 2 + 4, height / 2 + 4, text="0", anchor=tk.NW, font=DEFAULT_FONT)
 
-    def draw_dot(self, x, y, color="#a606cf"):
+    def draw_dot(self, x, y):
         width = self.canvas.winfo_width()
         height = self.canvas.winfo_height()
 
         x_spacing = width / (2 * self.scale)
         y_spacing = x_spacing
 
+        x_0 = x
+        y_0 = y
+
         x = width / 2 + x * x_spacing
         y = height / 2 - y * y_spacing
 
-        self.canvas.create_rectangle(x, y, x + x_spacing, y - y_spacing, fill=color)
+        if self.flag:
+            color_min = 0
+            color_max = 255
+            colors = []
+            delta = int((color_max - color_min) / (self.m - 1))
+            for i in range(self.m):
+                temp = color_min + delta * i
+                hex_value = '#{:02x}{:02x}{:02x}'.format(temp, temp, temp)
+                colors.append(hex_value)
+            self.canvas.create_rectangle(x, y, x + x_spacing, y - y_spacing, fill=colors[self.dots[(x_0,y_0)]])
+        else:
+            color = "#a606cf"
+            self.canvas.create_rectangle(x, y, x + x_spacing, y - y_spacing, fill=color)
 
     def update_dots(self):
         for dot in self.dots:
             self.draw_dot(dot[0], dot[1])
 
-    def update_all(self,  event=None):
+    def update_all(self, event=None):
         self.canvas.delete("all")
         self.time_window.delete(0, "end")
         self.time_window.insert(0, str(self.time))
@@ -205,6 +227,7 @@ class MyApp:
             return None
 
     def build_step(self):
+        self.flag = False
         self.dots = []
         start_dots = self.get_dots()
         if start_dots is None:
@@ -217,6 +240,7 @@ class MyApp:
         self.update_all()
 
     def build_dda(self):
+        self.flag = False
         self.dots = []
         start_dots = self.get_dots()
         if start_dots is None:
@@ -229,6 +253,7 @@ class MyApp:
         self.update_all()
 
     def build_bres(self):
+        self.flag = False
         self.dots = []
         start_dots = self.get_dots()
         if start_dots is None:
@@ -241,6 +266,7 @@ class MyApp:
         self.update_all()
 
     def build_circle(self):
+        self.flag = False
         self.dots = []
         start_dots = self.get_dots()
         if start_dots is None:
@@ -253,6 +279,7 @@ class MyApp:
         self.update_all()
 
     def build_castle_pitway(self):
+        self.flag = False
         self.dots = []
         start_dots = self.get_dots()
         if start_dots is None:
@@ -263,6 +290,27 @@ class MyApp:
         end_time = time.time()
         self.time = end_time - start_time
         self.update_all()
+
+    def build_vu(self):
+        self.dots = []
+        self.flag = True
+        start_dots = self.get_dots()
+        if start_dots is None:
+            return
+
+        start_time = time.time()
+        self.dots = algorithms.wu(*start_dots, self.m)
+        end_time = time.time()
+        self.time = end_time - start_time
+        self.update_all()
+
+    def ask_m(self):
+        m = simpledialog.askinteger('', 'Enter the number of shades:')
+        if m is not None:
+            self.m = m
+            self.build_vu()
+        else:
+            showerror('Wrong data! Try again')
 
 
 if __name__ == "__main__":

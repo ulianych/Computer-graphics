@@ -30,27 +30,25 @@ def liang_barsky(x_0, y_0, x_1, y_1, x_min, y_min, x_max, y_max):
 
 
 def cyrus_beck(x_a, y_a, x_b, y_b, polygon):
-    polygon.append(polygon[0])
+    p = []
+    for i in range(0, len(polygon), 2):
+        p.append([polygon[i], polygon[i+1]])
+
     t_min = 0
     t_max = 1
-    for i in range(len(polygon) - 1):
-        x_1 = polygon[i][0]
-        y_1 = polygon[i][1]
-        x_2 = polygon[i+1][0]
-        y_2 = polygon[i+1][1]
+    for i in range(len(p) - 1):
+        v1 = (p[i+1][0] - p[i][0]) * (y_b - y_a) - (p[i+1][1] - p[i][1]) * (x_b - x_a)
+        v2 = (p[i+1][0] - p[i][0]) * (y_a - p[i][1]) - (p[i+1][1] - p[i][1]) * (x_a - p[i][0])
 
-        v_1 = (x_2 - x_1) * (y_b - y_a) - (y_2 - y_1) * (x_b - x_a)
-        v_2 = (x_2 - x_1) * (y_a - y_1) - (y_2 - y_1) * (x_a - x_1)
-
-        t = -v_2 / v_1
-
-        if v_1 > 0:
-            if t_min < t:
-                t_min = t
-        elif v_1 < 0:
-            if t_max > t:
-                t_max = t
-        if not t_min < t_max:
+        if v1 > 0:
+            temp = - v2 / v1
+            if temp > t_min:
+                t_min = temp
+        else:
+            temp = - v2 / v1
+            if temp < t_max:
+                t_max = temp
+        if t_min > t_max:
             break
 
     x1_clip = x_a + (x_b - x_a) * t_min
@@ -59,4 +57,3 @@ def cyrus_beck(x_a, y_a, x_b, y_b, polygon):
     y2_clip = y_a + (y_b - y_a) * t_max
 
     return x1_clip, y1_clip, x2_clip, y2_clip
-

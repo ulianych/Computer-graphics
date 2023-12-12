@@ -1,4 +1,4 @@
-def round(x):
+def my_round(x):
     if x >= 0:
         return int(x + 0.5)
     else:
@@ -8,23 +8,23 @@ def round(x):
 def step_by_step(x1, y1, x2, y2):
     answer = []
     k = (y2 - y1) / (x2 - x1)
-    x = round(x1)
+    x = my_round(x1)
     b = y1 - x1 * k
-    answer.append([x, round(y1)])
+    answer.append([x, my_round(y1)])
 
     while x < x2:
-      x += 1
-      y = round(k * x + b)
-      answer.append([x, y])
+        x += 1
+        y = my_round(k * x + b)
+        answer.append([x, y])
 
     return answer
 
 
 def dda(x1, y1, x2, y2):
-    x_beg = round(x1)
-    y_beg = round(y1)
-    x_final = round(x2)
-    y_final = round(y2)
+    x_beg = my_round(x1)
+    y_beg = my_round(y1)
+    x_final = my_round(x2)
+    y_final = my_round(y2)
 
     l = max(abs(x_final - x_beg), abs(y_final - y_beg))
     answer = []
@@ -39,7 +39,7 @@ def dda(x1, y1, x2, y2):
     for i in range(2, l + 2):
         x += (x2 - x1) / l
         y += (y2 - y1) / l
-        answer.append([round(x), round(y)])
+        answer.append([my_round(x), my_round(y)])
 
     return answer
 
@@ -103,50 +103,49 @@ def bresenham_circle(x0, y0, r):
 
 
 def kastla_pitveya(x1, y1, x2, y2):
-  x = x2 - x1 - y2 + y1
-  y = y2 - y1
+    x = x2 - x1 - y2 + y1
+    y = y2 - y1
 
-  m1 = 's'
-  m2 = 'd'
+    m1 = 's'
+    m2 = 'd'
 
-  i = 0
+    i = 0
 
-  while x != y:
-    i += 1
-    if x > y:
-      x -= y
-      m2 = m1 + ''.join(reversed(m2))
-    else:
-      y -= x
-      m1 = m2 + ''.join(reversed(m1))
+    while x != y:
+        i += 1
+        if x > y:
+            x -= y
+            m2 = m1 + ''.join(reversed(m2))
+        else:
+            y -= x
+            m1 = m2 + ''.join(reversed(m1))
 
-  m = m2 + ''.join(reversed(m1))
+    m = m2 + ''.join(reversed(m1))
 
-  answer = []
-  answer.append([x1, y1])
+    answer = [[x1, y1]]
 
-  for point in m:
-    if point == 's':
-      x1 +=1
-      answer.append([x1, y1])
-    elif point == 'd':
-      x1 +=1
-      y1 +=1
-      answer.append([x1, y1])
+    for point in m:
+        if point == 's':
+            x1 += 1
+            answer.append([x1, y1])
+        elif point == 'd':
+            x1 += 1
+            y1 += 1
+            answer.append([x1, y1])
 
-  return answer
+    return answer
 
 
-def wu(x_a, x_b, y_a, y_b):
+def wu(x_a, y_a, x_b, y_b, m):
     n = 256
-    m = 4
+    #m = 4
     D = 0
     x1 = 0
     y1 = 0
     x2 = x_b - x_a
     y2 = y_b - y_a
 
-    d = round(y2 / x2 * n)
+    d = my_round(y2 / x2 * n)
 
     answer = {(x1 + x_a, y1 + y_a): 0, (x2 + x_a, y2 + y_a): 0}
 
@@ -158,10 +157,11 @@ def wu(x_a, x_b, y_a, y_b):
             y1 += 1
             y2 -= 1
             D -= n
-        g = int(D / n * m)
+        g = int(D / (n / m))
         answer[(x1 + x_a, y1 + y_a)] = g
         answer[(x2 + x_a, y2 + y_a)] = g
-        answer[(x1 + x_a, y1 + y_a + 1)] = m - 1 -g
-        answer[(x2 + x_a, y2 + y_a - 1)] = m - 1 -g
+        answer[(x1 + x_a, y1 + y_a + 1)] = m - 1 - g
+        answer[(x2 + x_a, y2 + y_a - 1)] = m - 1 - g
 
     return answer
+
